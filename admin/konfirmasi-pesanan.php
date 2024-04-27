@@ -19,7 +19,7 @@ if (isset($_SESSION['error'])) {
 include '../controller/koneksi.php';
 
 $sql = "SELECT keranjang_detail.id AS id_detail, keranjang.id, keranjang.status, keranjang.waktu_bayar, menu.nama_menu, menu.harga_menu, menu.gambar_menu , keranjang_detail.jumlah, keranjang_detail.total, keranjang_detail.id_keranjang
-, keranjang.id_user, user.username, user.email, keranjang.total_item
+, keranjang.id_user, user.username, user.email, keranjang.total_item, keranjang.jenis, keranjang.meja
 FROM keranjang_detail 
 INNER JOIN menu  ON keranjang_detail.id_menu = menu.id 
 INNER JOIN keranjang ON keranjang.id = keranjang_detail.id_keranjang
@@ -64,6 +64,8 @@ $result = $stmt->get_result();
   <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -138,7 +140,6 @@ $result = $stmt->get_result();
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-
 
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
@@ -236,10 +237,25 @@ $result = $stmt->get_result();
                             <tr>
                               <td rowspan="<?= $rowspan ?>"><?php echo $no ?></td>
                               <?php
+                              if ($row['status'] === 1) {
+                              ?>
+                                <td rowspan="<?= $rowspan ?>">
+                                  <form action="../controller/admin/pesanan_konfirmasi.php?id=<?php echo $row['id'] ?>" method="POST">
+                                    <input type="text" id="meeting-time" name="meeting-time" required>
+                                    <button value="submit" class="btn btn-success">
+                                      Terima Pesanan
+                                    </button>
+                                  </form>
+                                </td>
+                                <td rowspan="<?= $rowspan ?>">
+                                  <a href="../controller/admin/pesanan_tolak.php?id=<?php echo $row['id'] ?>" class="btn btn-danger"> Tolak </a>
+                                </td>
+                              <?php
+                              }
                               if ($row['status'] === 2) {
                               ?>
                                 <td rowspan="<?= $rowspan ?>">
-                                  <a href="../controller/admin/pesanan_terima.php?id=<?php echo $row['id'] ?>" class="btn btn-success"> Terima </a>
+                                  <a href="../controller/admin/pesanan_terima.php?id=<?php echo $row['id'] ?>" class="btn btn-success"> Terima Pembayaran</a>
                                 </td>
                                 <td rowspan="<?= $rowspan ?>">
                                   <a href="../controller/admin/pesanan_tolak.php?id=<?php echo $row['id'] ?>" class="btn btn-danger"> Tolak </a>
@@ -274,9 +290,21 @@ $result = $stmt->get_result();
                           }
                             ?>
                             <td><?php echo $row['nama_menu'] ?></td>
-                            <td><?php echo $row['waktu_bayar'] ?></td>
-                            <td>dine in</td>
-                            <td>1a</td>
+                            <td>
+                              <?php if (!isset($row['waktu_bayar'])) { ?>
+                                Belum Bayar
+                              <?php
+                              } else {
+                                echo $row['waktu_bayar'] ?>
+                              <?php } ?>
+                            </td>
+                            <td><?php if ($row['jenis'] === 'dine_in') { ?>
+                                Dine In
+                              <?php } else { ?>
+                                Take Away
+                              <?php  } ?>
+                            </td>
+                            <td><?php echo $row['meja'] ?></td>
                             </tr>
                         <?php
                           $rowid++;
@@ -321,8 +349,8 @@ $result = $stmt->get_result();
   <!-- Sparkline -->
   <script src="plugins/sparklines/sparkline.js"></script>
   <!-- JQVMap -->
-  <script src="plugins/jqvmap/jquery.vmap.min.js"></script>
-  <script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+  <!-- <script src="plugins/jqvmap/jquery.vmap.min.js"></script> -->
+  <!-- <script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script> -->
   <!-- jQuery Knob Chart -->
   <script src="plugins/jquery-knob/jquery.knob.min.js"></script>
   <!-- daterangepicker -->
@@ -347,9 +375,9 @@ $result = $stmt->get_result();
   <script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
   <script src="plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
   <script src="plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-  <script src="plugins/jszip/jszip.min.js"></script>
-  <script src="plugins/pdfmake/pdfmake.min.js"></script>
-  <script src="plugins/pdfmake/vfs_fonts.js"></script>
+  <!-- <script src="plugins/jszip/jszip.min.js"></script> -->
+  <!-- <script src="plugins/pdfmake/pdfmake.min.js"></script> -->
+  <!-- <script src="plugins/pdfmake/vfs_fonts.js"></script> -->
   <script src="plugins/datatables-buttons/js/buttons.html5.min.js"></script>
   <script src="plugins/datatables-buttons/js/buttons.print.min.js"></script>
   <script src="plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
@@ -370,6 +398,23 @@ $result = $stmt->get_result();
         "autoWidth": false,
         "responsive": true,
       });
+    });
+  </script>
+  <script>
+    $(function() {
+      $('#reservationdatetime').datetimepicker({
+        icons: {
+          time: 'far fa-clock'
+        }
+      });
+    })
+  </script>
+  <script>
+    // Inisialisasi Flatpickr untuk input datetime
+    flatpickr('#meeting-time', {
+      enableTime: true,
+      altFormat: "Y-m-d H:i:s", // Format yang diinginkan
+      altInput: true
     });
   </script>
 </body>

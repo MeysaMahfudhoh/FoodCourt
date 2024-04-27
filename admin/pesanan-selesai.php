@@ -20,7 +20,7 @@ if (isset($_SESSION['error'])) {
 include '../controller/koneksi.php';
 
 $sql = "SELECT keranjang_detail.id AS id_detail, keranjang.id, keranjang.status, keranjang.waktu_bayar, menu.nama_menu, menu.harga_menu, menu.gambar_menu , keranjang_detail.jumlah, keranjang_detail.total, keranjang_detail.id_keranjang
-, keranjang.id_user, user.username, user.email, keranjang.total_item
+, keranjang.id_user, user.username, user.email, keranjang.total_item, keranjang.meja, keranjang.jenis
 FROM keranjang_detail 
 INNER JOIN menu  ON keranjang_detail.id_menu = menu.id 
 INNER JOIN keranjang ON keranjang.id = keranjang_detail.id_keranjang
@@ -173,14 +173,6 @@ $result = $stmt->get_result();
               </a>
             </li>
 
-            <!-- <li class="nav-item">
-              <a href="dashboard.php" class="nav-link">
-                <i class="nav-icon fas fa-home"></i>
-                <p>
-                  Dashboard
-                </p>
-              </a>
-            </li> -->
 
           </ul>
         </nav>
@@ -248,7 +240,7 @@ $result = $stmt->get_result();
                               if ($row['status'] === 4) {
                               ?>
                                 <td rowspan="<?= $rowspan ?>">
-                                  <a href="../controller/admin/pesanan_selesai.php?id=<?php echo $row['id'] ?>" class="btn btn-success"> Terima </a>
+                                  <a href="../controller/admin/pesanan_selesai.php?id=<?php echo $row['id'] ?>" class="btn btn-success"> Selesaikan Pesanan </a>
                                 </td>
                               <?php
                               }
@@ -276,8 +268,13 @@ $result = $stmt->get_result();
                             ?>
                             <td><?php echo $row['nama_menu'] ?></td>
                             <td><?php echo $row['waktu_bayar'] ?></td>
-                            <td>dine in</td>
-                            <td>1a</td>
+                            <td><?php if ($row['jenis'] === 'dine_in') { ?>
+                                Dine In
+                              <?php } else { ?>
+                                Take Away
+                              <?php  } ?>
+                            </td>
+                            <td><?php echo $row['meja'] ?></td>
                             </tr>
                         <?php
                           $rowid++;

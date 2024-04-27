@@ -8,14 +8,15 @@ session_start();
 include 'koneksi.php';
 
 
-if (isset($_GET['id_keranjang']) && !empty($_GET['id_keranjang'])) {
+if (isset($_GET['id_keranjang']) && !empty($_GET['id_keranjang']) && isset($_GET['type']) && !empty($_GET['type'])) {
     $id_keranjang = $conn->real_escape_string($_GET['id_keranjang']);
+    $jenis =  $conn->real_escape_string($_GET['type']);
 }
+
 
 $query = "SELECT * FROM keranjang where id = $id_keranjang";
 $result = mysqli_query($conn, $query);
 $data = mysqli_fetch_assoc($result);
-$jenis = 'Dine In';
 
 date_default_timezone_set('Asia/Jakarta');
 $tanggal = date('Y-m-d H:i:s');
@@ -58,7 +59,7 @@ if ($result3->num_rows > 0) {
 require_once dirname(__FILE__) . '/../midtrans/Midtrans.php';
 // Set Your server key
 // can find in Merchant Portal -> Settings -> Access keys
-Config::$serverKey = 'SB-Mid-server-v3PQ3VtoznMAyIQ_p7MQ5aVo';
+Config::$serverKey = 'SB-Mid-server-mS1KozohAoJI_GfFKsnsq2CU';
 
 // non-relevant function only used for demo/example purpose
 printExampleWarningMessage();

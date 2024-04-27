@@ -22,7 +22,7 @@ if (isset($_GET['id']) && !empty($_GET['id']) && isset($_GET['status']) && !empt
     $id = $conn->real_escape_string($_GET['id']);
     $status = $conn->real_escape_string($_GET['status']);
 
-    if ($status = 1) {
+    if ($status === 1) {
         $sql = "UPDATE menu SET status = 2 WHERE id = '$id'";
     } else {
         $sql = "UPDATE menu SET status = 1 WHERE id = '$id'";

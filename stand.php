@@ -57,7 +57,7 @@ include 'controller/cart-view.php';
       </button>
     </div>
     <div class="search-form">
-      <input type="text" class="search-input" id="search-box" placeholder="Search" />
+      <input type="text" class="search-input" id="search-box" name="cari" placeholder="Search" autocomplete="off" />
       <i class="fas fa-search"></i>
     </div>
     <div class="cart-items-container">
@@ -83,11 +83,10 @@ include 'controller/cart-view.php';
           <?php
           }
           ?>
-          <a href="pesanan.php" class="btn">check out </a>
+          <button class="btn" id="orderButton">Check Out</button>
         <?php
         } else {
         ?>
-          <!-- <h1>tidak ada keranjang</h1> -->
           <a href="pesanan.php" class="btn">Lihat Pesanan Saya </a>
       <?php
         }
@@ -165,6 +164,61 @@ include 'controller/cart-view.php';
   <!-- -------------------------------------------FOOTER SECTION -->
 
   <script src="./script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script>
+    document.getElementById('orderButton').addEventListener('click', function() {
+      Swal.fire({
+        title: 'Pilih Jenis Order',
+        text: 'Pilih dine in atau take away ?',
+        icon: 'question',
+        showCancelButton: true,
+        showCloseButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Dine In',
+        cancelButtonText: 'Take Away'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = 'pesanan.php?type=dine_in';
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          window.location.href = 'pesanan.php?type=take_away';
+        } else {
+          window.location.href = 'stand.php';
+        }
+      });
+    });
+  </script>
+
+  <script>
+    $(document).ready(function() {
+      $('#search-box').on('keypress', function(e) {
+        if (e.which == 13) { // Only trigger on Enter key press
+          var query = $(this).val();
+          $.ajax({
+            url: 'controller/search.php',
+            method: 'POST',
+            data: {
+              cari: query
+            },
+            dataType: 'json',
+            success: function(response) {
+              if (response.url) {
+                window.location.href = response.url;
+              } else {
+                alert(response.error);
+              }
+            },
+            error: function() {
+              alert('GAGAL!!');
+            }
+          });
+          return false;
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>

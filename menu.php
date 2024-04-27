@@ -5,7 +5,7 @@ include 'controller/cart-view.php';
 if (isset($_GET['stand']) && !empty($_GET['stand'])) {
   $stand = $conn->real_escape_string($_GET['stand']);
 
-  $sql = "SELECT * FROM menu WHERE id_user = ?";
+  $sql = "SELECT * FROM menu WHERE id_user = ? AND status = 1";
   $stmt = $conn->prepare($sql);
   $stmt->bind_param('s', $stand);
   $stmt->execute();
@@ -63,7 +63,7 @@ if (isset($_SESSION['sukses'])) {
       </button>
     </div>
     <div class="search-form">
-      <input type="text" class="search-input" id="search-box" placeholder="Search" />
+      <input type="text" class="search-input" id="search-box" placeholder="Search" autocomplete="off" />
       <i class="fas fa-search"></i>
     </div>
     <div class="cart-items-container">
@@ -89,12 +89,13 @@ if (isset($_SESSION['sukses'])) {
           <?php
           }
           ?>
-          <a href="pesanan.php" class="btn">check out </a>
+          <!-- <a href="pesanan.php" class="btn">check out </a> -->
+          <button class="btn" id="orderButton">Check Out</button>
         <?php
         } else {
         ?>
-          <!-- <h1>tidak ada keranjang</h1> -->
-          <a href="pesanan.php" class="btn">Lihat Pesanan Saya </a>
+          <h1>tidak ada keranjang</h1>
+          <!-- <a href="pesanan.php" class="btn">Lihat Pesanan Saya </a> -->
       <?php
         }
       }
@@ -166,6 +167,75 @@ if (isset($_SESSION['sukses'])) {
   <!---------------------------------------------FOOTER SECTION -->
 
   <script src="./script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+ 
+  <script>
+    document.getElementById('orderButton').addEventListener('click', function() {
+      Swal.fire({
+        title: 'Pilih Jenis Order',
+        text: 'Pilih dine in atau take away ?',
+        icon: 'question',
+        showCancelButton: true,
+        showCloseButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Dine In',
+        cancelButtonText: 'Take Away'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Swal.fire(
+          //   'Dine In',
+          //   'You chose to dine in.',
+          //   'success'
+          // );
+          // header('Location: pesanan.php');
+          // Handle Dine In logic here
+          window.location.href = 'pesanan.php?type=dine_in';
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          // Swal.fire(
+          //   'Take Away',
+          //   'You chose to take away.',
+          //   'success'
+          // );
+          // Handle Take Away logic here
+          // header('Location: pesanan.php');
+          window.location.href = 'pesanan.php?type=take_away';
+        } else {
+          window.location.href = 'stand.php';
+        }
+      });
+    });
+  </script>
+
+   <script>
+    $(document).ready(function() {
+      $('#search-box').on('keypress', function(e) {
+        if (e.which == 13) { // Only trigger on Enter key press
+          var query = $(this).val();
+          $.ajax({
+            url: 'controller/search.php',
+            method: 'POST',
+            data: {
+              cari: query
+            },
+            dataType: 'json',
+            success: function(response) {
+              if (response.url) {
+                window.location.href = response.url;
+              } else {
+                alert(response.error);
+              }
+            },
+            error: function() {
+              alert('GAGAL!!');
+            }
+          });
+          return false;
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
