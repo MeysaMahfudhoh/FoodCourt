@@ -11,6 +11,8 @@ include 'koneksi.php';
 if (isset($_GET['id_keranjang']) && !empty($_GET['id_keranjang']) && isset($_GET['type']) && !empty($_GET['type'])) {
     $id_keranjang = $conn->real_escape_string($_GET['id_keranjang']);
     $jenis =  $conn->real_escape_string($_GET['type']);
+
+    // $upd =  "UPDATE keranjang SET type = $jenis  WHERE id = $id_keranjang";
 }
 
 

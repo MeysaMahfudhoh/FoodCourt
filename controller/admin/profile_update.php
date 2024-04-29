@@ -19,15 +19,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $sql = "UPDATE user SET username = '$nama' WHERE id = $id";
 
-    if ($conn->query($sql) === TRUE) {
-        $_SESSION['sukses'] = 'Profil Berhasil Diubah';
-        header("Location: {$_SERVER['HTTP_REFERER']}");
-        exit();
-    } else {
-        $_SESSION['error'] = 'Profil Gagal Diubah';
-        header("Location: {$_SERVER['HTTP_REFERER']}");
-    }
+        if ($conn->query($sql) === TRUE) {
+            $_SESSION['sukses'] = 'Profil Berhasil Diubah';
+            header("Location: {$_SERVER['HTTP_REFERER']}");
+            exit();
+        } else {
+            $_SESSION['error'] = 'Profil Gagal Diubah';
+            header("Location: {$_SERVER['HTTP_REFERER']}");
+        }
 
-    // Tutup koneksi database
-    $conn->close();
+        // Tutup koneksi database
+        $conn->close();
 }

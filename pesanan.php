@@ -16,8 +16,14 @@ if (isset($_SESSION['user_id'])) {
                 ORDER BY keranjang.id DESC
                 LIMIT 1
                 ";
+
     $result = mysqli_query($conn, $query);
     $data = mysqli_fetch_assoc($result);
+
+    $id =  $data['id'];
+    $update =  "UPDATE keranjang SET jenis = '$type'  WHERE id =  $id ";
+    $conn->query($update);
+    // echo ;
 
     $sql = "SELECT keranjang.id, keranjang_detail.id AS id_detail, menu.nama_menu, menu.harga_menu, menu.gambar_menu , keranjang_detail.jumlah, keranjang_detail.total, keranjang.status, keranjang.waktu_bayar
             FROM keranjang
@@ -189,7 +195,15 @@ if ($keranjang->num_rows === 0) {
                     <div class="card" style="background-color: transparent; border: 2px solid rgba(252, 252, 252, 1 ); border-radius: 35px;">
                         <div class="card-body">
                             <p class="m-0 p-0" style="color: white;">
-                                <i class="fas fa-clock"></i> Perkiraan pesanan diambil : <?php echo date("H:i", strtotime($data['perkiraan_waktu']))  ?>
+                                <i class="fas fa-clock"></i> Perkiraan pesanan
+                                <?php
+                                if ($type === "dine_in") {
+                                ?>
+                                    diantar
+                                <?php } else { ?>
+                                    diambil
+                                <?php } ?>
+                                : <?php echo date("H:i", strtotime($data['perkiraan_waktu']))  ?>
                             </p>
                         </div>
                     </div>
