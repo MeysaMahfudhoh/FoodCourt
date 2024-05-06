@@ -77,25 +77,26 @@ if (isset($_SESSION['sukses'])) {
           while ($row2 = $keranjang->fetch_array()) {
         ?>
             <div class="cart-item">
-              <a href="controller/cart-hapus.php?id=<?php echo $row2['id'] ?>&id_keranjang=<?php echo $row2['id_keranjang'] ?>&harga=<?php echo $row2['harga_menu'] ?>">
+              <a href="controller/cart-hapus.php?id=<?php echo $row2['id'] ?>">
                 <i class="fas fa-times"></i>
               </a>
               <img src="image/menu/<?php echo $row2['gambar_menu'] ?>" alt="menu" />
               <div class="content">
                 <h3><?php echo $row2['nama_menu'] ?></h3>
-                <div class="price"><?php echo $row2['harga_menu'] ?></div>
+                <div class="price"><?php echo $row2['total'] ?></div>
               </div>
+              <a href="controller/keranjang_detail_edit.php?id_detail=<?php echo $row2['id'] ?>&id_ker=<?php echo $row2['id_ker'] ?>&harga=<?php echo $row2['harga_menu'] ?>&aksi=tambah" class="btn btn-sm m-0" style="padding: 3px 3px;"><i class="fas fa-plus"></i></a>
+              <h2><?php echo $row2['jumlah'] ?></h2>
+              <a href="controller/keranjang_detail_edit.php?id_detail=<?php echo $row2['id'] ?>&id_ker=<?php echo $row2['id_ker'] ?>&harga=<?php echo $row2['harga_menu'] ?>&aksi=kurang" class="btn btn-sm m-0" style="padding: 3px 3px;"><i class="fas fa-minus"></i></a>
             </div>
           <?php
           }
           ?>
-          <!-- <a href="pesanan.php" class="btn">check out </a> -->
           <button class="btn" id="orderButton">Check Out</button>
         <?php
         } else {
         ?>
-          <h1>tidak ada keranjang</h1>
-          <!-- <a href="pesanan.php" class="btn">Lihat Pesanan Saya </a> -->
+          <a href="pesanan2.php" class="btn">Lihat Pesanan Saya </a>
       <?php
         }
       }
@@ -169,7 +170,7 @@ if (isset($_SESSION['sukses'])) {
   <script src="./script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
- 
+
   <script>
     document.getElementById('orderButton').addEventListener('click', function() {
       Swal.fire({
@@ -184,23 +185,9 @@ if (isset($_SESSION['sukses'])) {
         cancelButtonText: 'Take Away'
       }).then((result) => {
         if (result.isConfirmed) {
-          // Swal.fire(
-          //   'Dine In',
-          //   'You chose to dine in.',
-          //   'success'
-          // );
-          // header('Location: pesanan.php');
-          // Handle Dine In logic here
-          window.location.href = 'pesanan.php?type=dine_in';
+          window.location.href = 'pesanan2.php?type=dine_in';
         } else if (result.dismiss === Swal.DismissReason.cancel) {
-          // Swal.fire(
-          //   'Take Away',
-          //   'You chose to take away.',
-          //   'success'
-          // );
-          // Handle Take Away logic here
-          // header('Location: pesanan.php');
-          window.location.href = 'pesanan.php?type=take_away';
+          window.location.href = 'pesanan2.php?type=take_away';
         } else {
           window.location.href = 'stand.php';
         }
@@ -208,10 +195,10 @@ if (isset($_SESSION['sukses'])) {
     });
   </script>
 
-   <script>
+  <script>
     $(document).ready(function() {
       $('#search-box').on('keypress', function(e) {
-        if (e.which == 13) { // Only trigger on Enter key press
+        if (e.which == 13) {
           var query = $(this).val();
           $.ajax({
             url: 'controller/search.php',
@@ -236,6 +223,43 @@ if (isset($_SESSION['sukses'])) {
       });
     });
   </script>
+  <!-- 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const incrementButtons = document.querySelectorAll('.btn-increment');
+      const decrementButtons = document.querySelectorAll('.btn-decrement');
+
+      incrementButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const id = this.getAttribute('data-id');
+          const quantityDisplay = document.getElementById('quantity-' + id);
+          if (quantityDisplay) { 
+            let currentQuantity = parseInt(quantityDisplay.textContent);
+            quantityDisplay.textContent = ++currentQuantity;
+          } else {
+            console.error('Quantity display element not found for ID:', id);
+          }
+        });
+      });
+
+      decrementButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const id = this.getAttribute('data-id');
+          const quantityDisplay = document.getElementById('quantity-' + id);
+          if (quantityDisplay) { 
+            let currentQuantity = parseInt(quantityDisplay.textContent);
+            if (currentQuantity > 0) {
+              quantityDisplay.textContent = --currentQuantity;
+            }
+          } else {
+            console.error('Quantity display element not found for ID:', id);
+          }
+        });
+      });
+    });
+  </script> -->
+
+
 </body>
 
 </html>
