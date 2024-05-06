@@ -65,14 +65,17 @@ if (isset($_SESSION['error'])) {
           while ($row2 = $keranjang->fetch_array()) {
         ?>
             <div class="cart-item">
-              <a href="controller/cart-hapus.php?id=<?php echo $row2['id'] ?>&id_keranjang=<?php echo $row2['id_keranjang'] ?>&harga=<?php echo $row2['harga_menu'] ?>">
+              <a href="controller/cart-hapus.php?id=<?php echo $row2['id'] ?>">
                 <i class="fas fa-times"></i>
               </a>
               <img src="image/menu/<?php echo $row2['gambar_menu'] ?>" alt="menu" />
               <div class="content">
                 <h3><?php echo $row2['nama_menu'] ?></h3>
-                <div class="price"><?php echo $row2['harga_menu'] ?></div>
+                <div class="price"><?php echo $row2['total'] ?></div>
               </div>
+              <a href="controller/keranjang_detail_edit.php?id_detail=<?php echo $row2['id'] ?>&id_ker=<?php echo $row2['id_ker'] ?>&harga=<?php echo $row2['harga_menu'] ?>&aksi=tambah" class="btn btn-sm m-0" style="padding: 3px 3px;"><i class="fas fa-plus"></i></a>
+              <h2><?php echo $row2['jumlah'] ?></h2>
+              <a href="controller/keranjang_detail_edit.php?id_detail=<?php echo $row2['id'] ?>&id_ker=<?php echo $row2['id_ker'] ?>&harga=<?php echo $row2['harga_menu'] ?>&aksi=kurang" class="btn btn-sm m-0" style="padding: 3px 3px;"><i class="fas fa-minus"></i></a>
             </div>
           <?php
           }
@@ -81,7 +84,7 @@ if (isset($_SESSION['error'])) {
         <?php
         } else {
         ?>
-          <a href="pesanan.php" class="btn">Lihat Pesanan Saya </a>
+          <a href="pesanan2.php" class="btn">Lihat Pesanan Saya </a>
       <?php
         }
       }
@@ -262,9 +265,9 @@ if (isset($_SESSION['error'])) {
         cancelButtonText: 'Take Away'
       }).then((result) => {
         if (result.isConfirmed) {
-          window.location.href = 'pesanan.php?type=dine_in';
+          window.location.href = 'pesanan2.php?type=dine_in';
         } else if (result.dismiss === Swal.DismissReason.cancel) {
-          window.location.href = 'pesanan.php?type=take_away';
+          window.location.href = 'pesanan2.php?type=take_away';
         } else {
           window.location.href = 'index.php';
         }

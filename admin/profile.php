@@ -12,11 +12,11 @@ if ($_SESSION['role'] == 'mahasiswa') {
 if (isset($_SESSION['sukses'])) {
     echo "<script>alert('" . $_SESSION['sukses'] . "');</script>"; // Menampilkan alert jika ada sukses
     unset($_SESSION['sukses']);
-  }
-  if (isset($_SESSION['error'])) {
+}
+if (isset($_SESSION['error'])) {
     echo "<script>alert('" . $_SESSION['error'] . "');</script>";
     unset($_SESSION['error']);
-  }
+}
 
 include '../controller/koneksi.php';
 $id_user = $_SESSION['user_id'];
@@ -203,8 +203,12 @@ $data = mysqli_fetch_assoc($result);
                                         </div>
                                     </div>
                                     <div class="mb-3">
+                                        <label for="name" class="form-label">Nomer Stand</label>
+                                        <input type="text" class="form-control" id="no_stand" name="no_stand" autocomplete="off" placeholder="Nama" value="<?php echo $data['username'] ?>">
+                                    </div>
+                                    <div class="mb-3">
                                         <label for="name" class="form-label">Nama Stand</label>
-                                        <input type="text" class="form-control" id="name" name="name" autocomplete="off" placeholder="Nama" value="<?php echo $data['username'] ?>">
+                                        <input type="text" class="form-control" id="nama_stand" name="nama_stand" autocomplete="off" placeholder="Nama" value="<?php echo $data['nama_toko'] ?>">
                                     </div>
 
                                     <div class="my-2 d-flex justify-content-around button">
@@ -214,7 +218,20 @@ $data = mysqli_fetch_assoc($result);
                                 </form>
                             </div>
                             <div class="tab-pane fade" id="vert-tabs-profile" role="tabpanel" aria-labelledby="vert-tabs-profile-tab">
-                                Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam.
+                                <form action="../controller/admin/email_update.php" method="post">
+                                    <input type="hidden" name="id" id="" value="<?php echo $data['id'] ?>">
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="text" class="form-control" id="email" name="email" autocomplete="off" placeholder="Nama" value="<?php echo $data['email'] ?>" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="text" class="form-control" id="password" name="password" autocomplete="off" placeholder="Password" value="" required>
+                                    </div>
+                                    <div class="my-2 d-flex justify-content-around button">
+                                        <button type="submit" value="submit" class="btn-block btn-primary me-2">Simpan</button>
+                                    </div>
+                                </form>
                             </div>
                             <!-- <div class="tab-pane fade" id="vert-tabs-messages" role="tabpanel" aria-labelledby="vert-tabs-messages-tab">
                                 Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.

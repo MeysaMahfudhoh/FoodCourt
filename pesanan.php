@@ -21,9 +21,11 @@ if (isset($_SESSION['user_id'])) {
     $data = mysqli_fetch_assoc($result);
 
     $id =  $data['id'];
-    $update =  "UPDATE keranjang SET jenis = '$type'  WHERE id =  $id ";
+    date_default_timezone_set('Asia/Jakarta');
+    $currentDateTime = date('Y-m-d H:i:s');
+    $newDateTime = date('Y-m-d H:i:s', strtotime($currentDateTime . ' +10 minutes'));
+    $update = "UPDATE keranjang SET jenis = '$type', waktu_batal='$newDateTime' WHERE id =  $id ";
     $conn->query($update);
-    // echo ;
 
     $sql = "SELECT keranjang.id, keranjang_detail.id AS id_detail, menu.nama_menu, menu.harga_menu, menu.gambar_menu , keranjang_detail.jumlah, keranjang_detail.total, keranjang.status, keranjang.waktu_bayar
             FROM keranjang
@@ -338,7 +340,6 @@ if ($keranjang->num_rows === 0) {
             <div class="col text-center">
                 <!-- <?php echo $data['status'] ?> -->
                 <?php
-
                 if ($data['status'] == 1) {
                 ?>
                     <a target="_blank" href="controller/keranjang.php?id_keranjang=<?php echo $data['id'] ?>&type=<?php echo $type ?>">
