@@ -19,7 +19,7 @@ if (isset($_SESSION['error'])) {
 include '../controller/koneksi.php';
 
 $sql = "SELECT keranjang_detail.id AS id_detail, keranjang.id, keranjang.status, keranjang.waktu_bayar, menu.nama_menu, menu.harga_menu, menu.gambar_menu , keranjang_detail.jumlah, keranjang_detail.total, keranjang_detail.id_keranjang
-, keranjang.id_user, user.username, user.email, keranjang.total_item, keranjang.jenis, keranjang.meja
+, keranjang.id_user, user.username, user.email, keranjang.total_item, keranjang.jenis, keranjang.meja, keranjang_detail.status AS detail_status
 FROM keranjang_detail 
 INNER JOIN menu  ON keranjang_detail.id_menu = menu.id 
 INNER JOIN keranjang ON keranjang.id = keranjang_detail.id_keranjang
@@ -213,12 +213,13 @@ $result = $stmt->get_result();
                         <th>Nomor</th>
                         <th>Konfirmasi</th>
                         <th>Tolak</th>
-                        <th>Username</th>
+                        <!-- <th>Username</th> -->
                         <th>Email</th>
-                        <th>Nama Menu</th>
                         <th>Waktu Pesanan</th>
-                        <th>Order</th>
                         <th>Nomer Meja</th>
+                        <th>Order</th>
+                        <th>Nama Menu</th>
+                        <th>Habis</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -283,28 +284,38 @@ $result = $stmt->get_result();
                               <?php
                               }
                               ?>
-                              <td rowspan="<?= $rowspan ?>"><?php echo $row['username'] ?></td>
+                              <!-- <td rowspan="<?= $rowspan ?>"><?php echo $row['username'] ?></td> -->
                               <td rowspan="<?= $rowspan ?>"><?php echo $row['email'] ?></td>
+                              <td rowspan="<?= $rowspan ?>">
+                                <?php if (!isset($row['waktu_bayar'])) { ?>
+                                  Belum Bayar
+                                <?php
+                                } else {
+                                  echo $row['waktu_bayar'] ?>
+                                <?php } ?>
+                              </td>
+                              <td rowspan="<?= $rowspan ?>"><?php echo $row['meja'] ?></td>
+                              <td rowspan="<?= $rowspan ?>">
+                                <?php if ($row['jenis'] === 'dine_in') { ?>
+                                  Dine In
+                                <?php } else { ?>
+                                  Take Away
+                                <?php  } ?>
+                              </td>
 
                             <?php
                           }
                             ?>
                             <td><?php echo $row['nama_menu'] ?></td>
                             <td>
-                              <?php if (!isset($row['waktu_bayar'])) { ?>
-                                Belum Bayar
                               <?php
-                              } else {
-                                echo $row['waktu_bayar'] ?>
-                              <?php } ?>
-                            </td>
-                            <td><?php if ($row['jenis'] === 'dine_in') { ?>
-                                Dine In
+                              if ($row['detail_status'] == 1) {
+                              ?>
+                                <a href="../controller/keranjang_detail_cancel.php?id_detail=<?php echo $row['id_detail'] ?>&detail_status=<?php echo $row['detail_status'] ?>&id_ker=<?php echo $row['id'] ?>&harga=<?php echo $row['harga_menu'] ?>&jumlah=<?php echo $row['jumlah']?>" class="btn btn-success">Konfirmasi</a>
                               <?php } else { ?>
-                                Take Away
-                              <?php  } ?>
+                                <a href="../controller/keranjang_detail_cancel.php?id_detail=<?php echo $row['id_detail'] ?>&detail_status=<?php echo $row['detail_status'] ?>&id_ker=<?php echo $row['id'] ?>&harga=<?php echo $row['harga_menu'] ?>&jumlah=<?php echo $row['jumlah']?>" class="btn btn-primary">Batalkan</a> <?php } ?>
                             </td>
-                            <td><?php echo $row['meja'] ?></td>
+
                             </tr>
                         <?php
                           $rowid++;

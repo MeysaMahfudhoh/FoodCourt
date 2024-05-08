@@ -21,6 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['loggedin'] = true;
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['nama'] = $user['username'];
+            $_SESSION['toko'] = $user['nama_toko'];
             $_SESSION['email'] = $user['email'];
             $_SESSION['role'] = $user['role'];
 

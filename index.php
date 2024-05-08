@@ -65,14 +65,17 @@ if (isset($_SESSION['error'])) {
           while ($row2 = $keranjang->fetch_array()) {
         ?>
             <div class="cart-item">
-              <a href="controller/cart-hapus.php?id=<?php echo $row2['id'] ?>&id_keranjang=<?php echo $row2['id_keranjang'] ?>&harga=<?php echo $row2['harga_menu'] ?>">
+              <a href="controller/cart-hapus.php?id=<?php echo $row2['id'] ?>">
                 <i class="fas fa-times"></i>
               </a>
               <img src="image/menu/<?php echo $row2['gambar_menu'] ?>" alt="menu" />
               <div class="content">
                 <h3><?php echo $row2['nama_menu'] ?></h3>
-                <div class="price"><?php echo $row2['harga_menu'] ?></div>
+                <div class="price"><?php echo $row2['total'] ?></div>
               </div>
+              <a href="controller/keranjang_detail_edit.php?id_detail=<?php echo $row2['id'] ?>&id_ker=<?php echo $row2['id_ker'] ?>&harga=<?php echo $row2['harga_menu'] ?>&aksi=tambah" class="btn btn-sm m-0" style="padding: 3px 3px;"><i class="fas fa-plus"></i></a>
+              <h2><?php echo $row2['jumlah'] ?></h2>
+              <a href="controller/keranjang_detail_edit.php?id_detail=<?php echo $row2['id'] ?>&id_ker=<?php echo $row2['id_ker'] ?>&harga=<?php echo $row2['harga_menu'] ?>&aksi=kurang" class="btn btn-sm m-0" style="padding: 3px 3px;"><i class="fas fa-minus"></i></a>
             </div>
           <?php
           }
@@ -81,7 +84,7 @@ if (isset($_SESSION['error'])) {
         <?php
         } else {
         ?>
-          <a href="pesanan.php" class="btn">Lihat Pesanan Saya </a>
+          <a href="pesanan2.php" class="btn">Lihat Pesanan Saya </a>
       <?php
         }
       }
@@ -147,7 +150,7 @@ if (isset($_SESSION['error'])) {
   <section class="contact" id="contact">
     <h1 class="heading">contact <span>us</span></h1>
     <div class="row">
-      <iframe class="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d983.3235940970079!2d8.540719273659763!3d47.3713194174677!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47900a00aa1e1d17%3A0x278f576acdd580f5!2sStorchen%20Z%C3%BCrich%20-%20Lifestyle%20Boutique%20Hotel!5e0!3m2!1sde!2sch!4v1658505945506!5m2!1sde!2sch" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <iframe class="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3159.148560217434!2d112.72421902653578!3d-7.314180581776443!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7fb7a74c60bc1%3A0x3eaf6f55d501a7cd!2sFood%20Court%20Baseball%20Unesa!5e0!3m2!1sid!2sid!4v1714563856195!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>"></iframe>
       <form>
         <h3>get in touch</h3>
         <div class="inputBox">
@@ -262,9 +265,9 @@ if (isset($_SESSION['error'])) {
         cancelButtonText: 'Take Away'
       }).then((result) => {
         if (result.isConfirmed) {
-          window.location.href = 'pesanan.php?type=dine_in';
+          window.location.href = 'pesanan2.php?type=dine_in';
         } else if (result.dismiss === Swal.DismissReason.cancel) {
-          window.location.href = 'pesanan.php?type=take_away';
+          window.location.href = 'pesanan2.php?type=take_away';
         } else {
           window.location.href = 'index.php';
         }

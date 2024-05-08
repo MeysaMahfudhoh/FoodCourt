@@ -5,10 +5,11 @@ include '../koneksi.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Ambil nilai yang dikirim melalui form
     $id = $_POST['id'];
-    $nama = $_POST['name'];
+    $nama = $_POST['nama_stand'];
+    $nomer = $_POST['no_stand'];
     $foto = $_FILES['image']['name'];
     $targetDir = "../../image/profile/";
-    var_dump($nama);
+    // var_dump($nama);
 
     if (isset($foto) && !empty($foto)) {
         $upload_foto = "UPDATE user SET foto = '$foto' WHERE id = $id";
@@ -17,17 +18,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn->query($upload_foto);
     }
 
-    $sql = "UPDATE user SET username = '$nama' WHERE id = $id";
+    $sql = "UPDATE user SET username = '$nomer', nama_toko = '$nama,' WHERE id = $id";
 
-        if ($conn->query($sql) === TRUE) {
-            $_SESSION['sukses'] = 'Profil Berhasil Diubah';
-            header("Location: {$_SERVER['HTTP_REFERER']}");
-            exit();
-        } else {
-            $_SESSION['error'] = 'Profil Gagal Diubah';
-            header("Location: {$_SERVER['HTTP_REFERER']}");
-        }
+    if ($conn->query($sql) === TRUE) {
+        $_SESSION['sukses'] = 'Profil Berhasil Diubah';
+        header("Location: {$_SERVER['HTTP_REFERER']}");
+        exit();
+    } else {
+        $_SESSION['error'] = 'Profil Gagal Diubah';
+        header("Location: {$_SERVER['HTTP_REFERER']}");
+    }
 
-        // Tutup koneksi database
-        $conn->close();
+    // Tutup koneksi database
+    $conn->close();
 }
