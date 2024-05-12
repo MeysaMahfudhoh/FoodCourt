@@ -19,6 +19,7 @@ if (isset($_GET['id']) && !empty($_GET['id']) && isset($_GET['id_keranjang']) &&
         $itembaru = $row['total_item'] - 1;
         $sql5 = "UPDATE keranjang SET total_item = '$itembaru', total_harga = '$hargabaru' WHERE id = $id_keranjang";
         $stmt5 = $conn->query($sql5);
+        // var_dump(true);
         //     $sql1 = "SELECT * FROM keranjang_detail WHERE id = ?";
         //     $stmt = $conn->prepare($sql1);
         //     $stmt->bind_param("i", $id_keranjang);
@@ -42,6 +43,7 @@ if (isset($_GET['id']) && !empty($_GET['id']) && isset($_GET['id_keranjang']) &&
 
     $conn->close();
 } else {
+    // var_dump($harga);
     $_SESSION['error'] = 'ID menu tidak valid';
     header("Location: {$_SERVER['HTTP_REFERER']}");
     exit();

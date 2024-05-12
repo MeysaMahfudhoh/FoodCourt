@@ -76,19 +76,23 @@ if (isset($_SESSION['sukses'])) {
         if ($keranjang->num_rows > 0) {
           while ($row2 = $keranjang->fetch_array()) {
         ?>
-            <div class="cart-item">
-              <a href="controller/cart-hapus.php?id=<?php echo $row2['id'] ?>">
-                <i class="fas fa-times"></i>
-              </a>
-              <img src="image/menu/<?php echo $row2['gambar_menu'] ?>" alt="menu" />
-              <div class="content">
-                <h3><?php echo $row2['nama_menu'] ?></h3>
-                <div class="price"><?php echo $row2['total'] ?></div>
+            <!-- <?php if (isset($row2['waktu_pesan'])) { ?>
+              <a href="pesanan2.php" class="btn">Lihat Pesanan Saya </a>
+            <?php } else { ?> -->
+              <div class="cart-item">
+                <a href="controller/cart-hapus.php?id=<?php echo $row2['id'] ?>&id_keranjang=<?php echo $row2['id_keranjang'] ?>&harga=<?php echo $row2['harga_menu'] ?>">
+                  <i class="fas fa-times"></i>
+                </a>
+                <img src="image/menu/<?php echo $row2['gambar_menu'] ?>" alt="menu" />
+                <div class="content">
+                  <h3><?php echo $row2['nama_menu'] ?></h3>
+                  <div class="price"><?php echo $row2['total'] ?></div>
+                </div>
+                <a href="controller/keranjang_detail_edit.php?id_detail=<?php echo $row2['id'] ?>&id_ker=<?php echo $row2['id_ker'] ?>&harga=<?php echo $row2['harga_menu'] ?>&aksi=tambah" class="btn btn-sm m-0" style="padding: 3px 3px;"><i class="fas fa-plus"></i></a>
+                <h2><?php echo $row2['jumlah'] ?></h2>
+                <a href="controller/keranjang_detail_edit.php?id_detail=<?php echo $row2['id'] ?>&id_ker=<?php echo $row2['id_ker'] ?>&harga=<?php echo $row2['harga_menu'] ?>&aksi=kurang" class="btn btn-sm m-0" style="padding: 3px 3px;"><i class="fas fa-minus"></i></a>
               </div>
-              <a href="controller/keranjang_detail_edit.php?id_detail=<?php echo $row2['id'] ?>&id_ker=<?php echo $row2['id_ker'] ?>&harga=<?php echo $row2['harga_menu'] ?>&aksi=tambah" class="btn btn-sm m-0" style="padding: 3px 3px;"><i class="fas fa-plus"></i></a>
-              <h2><?php echo $row2['jumlah'] ?></h2>
-              <a href="controller/keranjang_detail_edit.php?id_detail=<?php echo $row2['id'] ?>&id_ker=<?php echo $row2['id_ker'] ?>&harga=<?php echo $row2['harga_menu'] ?>&aksi=kurang" class="btn btn-sm m-0" style="padding: 3px 3px;"><i class="fas fa-minus"></i></a>
-            </div>
+            <!-- <?php } ?> -->
           <?php
           }
           ?>
@@ -185,7 +189,23 @@ if (isset($_SESSION['sukses'])) {
         cancelButtonText: 'Take Away'
       }).then((result) => {
         if (result.isConfirmed) {
-          window.location.href = 'pesanan2.php?type=dine_in';
+          // window.location.href = 'pesanan2.php?type=dine_in';
+          Swal.fire({
+            title: 'Berapa Orang ?',
+            input: "number",
+            showCloseButton: true,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Pesan',
+          }).then((inputResult) => {
+            if (inputResult.value) {
+              const number = inputResult.value;
+              // Swal.fire(`Orang: ${number}`);
+              window.location.href = `pesanan2.php?type=dine_in&orang=${number}`;
+            } else {
+              window.location.href = 'stand.php';
+            }
+
+          });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           window.location.href = 'pesanan2.php?type=take_away';
         } else {

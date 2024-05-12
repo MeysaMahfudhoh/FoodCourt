@@ -3,13 +3,15 @@ session_start();
 include 'controller/koneksi.php';
 
 
-if (isset($_GET['type']) && !empty($_GET['type'])) {
+if (isset($_GET['type']) && !empty($_GET['type']) && isset($_GET['orang']) && !empty($_GET['orang'])) {
     $type = $conn->real_escape_string($_GET['type']);
+    $orang = $conn->real_escape_string($_GET['orang']);
 }
 
 if (isset($_SESSION['user_id'])) {
 
     $id_user = $_SESSION['user_id'];
+    // cek ketersediaan keranjang daari user
     $query =    "SELECT keranjang.id, user.username, user.nama_toko, keranjang.status, keranjang.waktu_konfirmasi, 
                 keranjang.waktu_antar, keranjang.waktu_selesai,keranjang.perkiraan_waktu, keranjang.waktu_batal, keranjang.waktu_pesan, keranjang.jenis, keranjang.total_harga
                 FROM keranjang 
@@ -26,9 +28,13 @@ if (isset($_SESSION['user_id'])) {
     $wakkktu = $data['waktu_batal'];
     $waktu_pesan = $data['waktu_pesan'];
     $total_harga = $data['total_harga'];
-    // $type = $data['jenis'];
+    if (!isset($type) && !isset($orang)) {
+        $type = $data['jenis'];
+        $orang = 0;
+    }
 
     if (!isset($waktu_pesan)) {
+        //update keranjang jika baru checkout
         date_default_timezone_set('Asia/Jakarta');
         $currentDateTime = date('Y-m-d H:i:s');
         $newDateTime = date('Y-m-d H:i:s', strtotime($currentDateTime . ' +10 minutes'));
@@ -36,6 +42,7 @@ if (isset($_SESSION['user_id'])) {
         $conn->query($update);
     }
 
+    //menampilkan keranjang dan detail keranjang
     $sql = "SELECT keranjang.id, keranjang_detail.id AS id_detail, menu.nama_menu, menu.harga_menu, menu.gambar_menu , keranjang_detail.jumlah, keranjang_detail.total, keranjang.status, keranjang.waktu_bayar, keranjang_detail.status
             FROM keranjang
             INNER JOIN keranjang_detail ON keranjang.id = keranjang_detail.id_keranjang
@@ -49,6 +56,7 @@ if (isset($_SESSION['user_id'])) {
     $stmt->execute();
     $keranjang = $stmt->get_result();
 
+    //menampilkan detail keranjang
     $sql2 = "SELECT keranjang_detail.id_menu, keranjang_detail.id_keranjang, keranjang_detail.jumlah, keranjang_detail.total, keranjang_detail.status, menu.nama_menu
     FROM keranjang_detail
     INNER JOIN menu on keranjang_detail.id_menu = menu.id
@@ -57,6 +65,37 @@ if (isset($_SESSION['user_id'])) {
     $stmt2->bind_param("i", $data['id']);
     $stmt2->execute();
     $detail = $stmt2->get_result();
+
+    //menapilkan meja id paling tinggi
+    $sql4 = "SELECT MAX(id_meja_detail) AS maxmeja , id_keranjang
+    FROM meja";
+    $result2 = mysqli_query($conn, $sql4);
+    $meja = mysqli_fetch_assoc($result2);
+    $id_meja_detail =  $meja['maxmeja'] + 1;
+    $id2 = $meja['id_keranjang'];
+
+    //insert meja
+    if ($id2 !== $id) {
+        $sql3 = "INSERT INTO meja (id_keranjang, id_meja_detail) VALUES (?,?)";
+        $stmt3 = $conn->prepare($sql3);
+        for ($i = 0; $i < $orang; $i++) {
+            $id_meja_detail_current = $id_meja_detail + $i;
+            $stmt3->bind_param("ii", $id, $id_meja_detail_current);
+            $stmt3->execute();
+        }
+    }
+
+    //menampilkan meja berdasarkan nomer keranjang
+    $sql5 = "SELECT *  FROM meja
+    INNER JOIN meja_detail ON meja.id_meja_detail = meja_detail.id
+    WHERE id_keranjang = ?
+    ";
+    $stmt4 = $conn->prepare($sql5);
+    $stmt4->bind_param("i", $id);
+    $stmt4->execute();
+    $mejakursi = $stmt4->get_result();
+
+
 
     $stmt->close();
 } else {
@@ -438,7 +477,6 @@ if ($keranjang->num_rows === 0) {
                             <?php
                             if ($detail->num_rows > 0) {
                                 while ($row3 = $detail->fetch_array()) {
-
                             ?>
                                     <div class="row mb-2">
                                         <div class="col-auto">
@@ -507,6 +545,24 @@ if ($keranjang->num_rows === 0) {
                                     </h3>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <h3>Meja </h3>
+                                </div>
+                                <div class="col-auto ml-auto">
+                                    <h3>
+                                        <?php
+                                        if ($mejakursi->num_rows > 0) {
+                                            while ($row4 = $mejakursi->fetch_array()) {
+                                        ?>
+                                                <?php echo $row4['kode'] ?>
+                                            <?php }
+                                        } else { ?>
+                                            ---
+                                        <?php } ?>
+                                    </h3>
+                                </div>
+                            </div>
                             <div class="row justify-content-center pt-5">
                                 <div class="col-auto ">
                                     <?php
@@ -514,11 +570,14 @@ if ($keranjang->num_rows === 0) {
                                         if (isset($data['waktu_batal'])) {
                                             // $data['waktu_batal'] = $wakkktu;
                                     ?>
-                                            <a target="_blank" href="controller/keranjang_cancel.php?id_keranjang=<?php echo $data['id'] ?>&type=<?php echo $type ?>">
+                                            <a target="" href="controller/keranjang_cancel.php?id_keranjang=<?php echo $data['id'] ?>&type=<?php echo $type ?>">
                                                 <button id="myButton" class="btn btn-primary font-weight-bold mr-1" style="background-color:  #1714B6; width: 100px; border-radius:15px">
                                                     <div id="time"></div> Cancel
                                                 </button>
                                             </a>
+                                            <!-- <a href="index.php">
+                                                <button class="btn btn-primary font-weight-bold" style="background-color:  #1714B6; width: 120px;  border-radius:15px">Kembali</button>
+                                            </a> -->
                                         <?php } else { ?>
                                             <a target="_blank" href="controller/keranjang_cancel.php?id_keranjang=<?php echo $data['id'] ?>&type=<?php echo $type ?>">
                                                 <button class="btn btn-primary font-weight-bold mr-1" style="background-color:  #1714B6; width: 100px; border-radius:15px">
@@ -548,7 +607,6 @@ if ($keranjang->num_rows === 0) {
                                     <?php }
                                     if ($data['status'] > 3) { ?>
                                         <a href="index.php">
-
                                             <button class="btn btn-primary font-weight-bold" style="background-color:  #1714B6; width: 120px;  border-radius:15px">Kembali</button>
                                         </a>
                                     <?php
@@ -571,9 +629,9 @@ if ($keranjang->num_rows === 0) {
     function startCountdown(endTime, display) {
         const button = document.querySelector('#myButton');
         button.disabled = false;
-        const end = new Date(endTime); // Tidak perlu konversi ke UTC karena sudah dalam format UTC
+        const end = new Date(endTime);
         const interval = setInterval(function() {
-            const now = new Date(); // Mengambil waktu saat ini dalam zona waktu lokal pengguna
+            const now = new Date();
             const distance = end - now;
 
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -585,7 +643,8 @@ if ($keranjang->num_rows === 0) {
 
             if (distance < 0) {
                 clearInterval(interval);
-                display.textContent = "Time's up!";
+                // display.textContent = "waktu habis! ";
+                updateQuery();
                 button.disabled = true;
             }
         }, 1000);
@@ -596,6 +655,25 @@ if ($keranjang->num_rows === 0) {
         var display = document.querySelector('#time');
         startCountdown(endTime, display);
     };
+
+    function updateQuery() {
+        var iid = "<?php echo $id; ?>"
+        var tipe = "<?php echo $type; ?>"
+        $.ajax({
+            url: 'controller/keranjang_cancel.php',
+            type: 'GET',
+            data: {
+                id_keranjang: iid,
+                type: tipe
+            },
+            success: function(response) {
+                console.log('Data berhasil diperbarui:', response);
+            },
+            error: function(xhr, status, error) {
+                console.error('Terjadi kesalahan:', error);
+            }
+        });
+    }
 </script>
 
 </html>

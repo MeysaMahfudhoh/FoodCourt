@@ -65,7 +65,7 @@ if (isset($_SESSION['error'])) {
           while ($row2 = $keranjang->fetch_array()) {
         ?>
             <div class="cart-item">
-              <a href="controller/cart-hapus.php?id=<?php echo $row2['id'] ?>">
+              <a href="controller/cart-hapus.php?id=<?php echo $row2['id'] ?>&id_keranjang=<?php echo $row2['id_keranjang'] ?>&harga=<?php echo $row2['harga_menu'] ?>">
                 <i class="fas fa-times"></i>
               </a>
               <img src="image/menu/<?php echo $row2['gambar_menu'] ?>" alt="menu" />
