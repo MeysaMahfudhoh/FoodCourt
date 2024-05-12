@@ -75,7 +75,8 @@ if (isset($_SESSION['user_id'])) {
     $id2 = $meja['id_keranjang'];
 
     //insert meja
-    if ($id2 !== $id) {
+    if ($id2 = $id) {
+    } else {
         $sql3 = "INSERT INTO meja (id_keranjang, id_meja_detail) VALUES (?,?)";
         $stmt3 = $conn->prepare($sql3);
         for ($i = 0; $i < $orang; $i++) {
