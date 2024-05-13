@@ -3,10 +3,15 @@ session_start();
 include 'controller/koneksi.php';
 
 
-if (isset($_GET['type']) && !empty($_GET['type']) && isset($_GET['orang']) && !empty($_GET['orang'])) {
+if (isset($_GET['type']) && !empty($_GET['type']) ) {
     $type = $conn->real_escape_string($_GET['type']);
-    $orang = $conn->real_escape_string($_GET['orang']);
 }
+if(isset($_GET['orang']) && !empty($_GET['orang'])){
+    $orang = $conn->real_escape_string($_GET['orang']);
+}else{
+    $orang = 0;
+}
+// var_dump($type,$orang);
 
 if (isset($_SESSION['user_id'])) {
 
