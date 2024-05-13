@@ -70,11 +70,7 @@ $result = $stmt->get_result();
 
 <body class="hold-transition sidebar-mini layout-fixed">
   <div class="wrapper">
-
-
-    <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-      <!-- Left navbar links -->
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
@@ -84,9 +80,7 @@ $result = $stmt->get_result();
         </li>
       </ul>
 
-      <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
-        <!-- Navbar Search -->
         <li class="nav-item">
           <a class="nav-link" data-widget="navbar-search" href="#" role="button">
             <i class="fas fa-search"></i>
@@ -125,32 +119,19 @@ $result = $stmt->get_result();
 
       </ul>
     </nav>
-    <!-- /.navbar -->
-
-    <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color: #1714B6;">
-      <!-- Brand Logo -->
       <a href="dashboard.php" class="brand-link">
         <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">Halaman Admin</span>
       </a>
-
-      <!-- Sidebar -->
       <div class="sidebar">
-
-        <!-- Sidebar Menu -->
         <nav class="mt-2">
-
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-
             <li class="nav-item">
               <a href="konfirmasi-pesanan.php" class="nav-link">
                 <i class="nav-icon fas fa-bell"></i>
                 <p>
                   Konfirmasi Pesanan
-                  <!-- <span class="right badge badge-danger">New</span> -->
                 </p>
               </a>
             </li>
@@ -175,28 +156,20 @@ $result = $stmt->get_result();
 
           </ul>
         </nav>
-        <!-- /.sidebar-menu -->
       </div>
-      <!-- /.sidebar -->
     </aside>
 
-    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
       <div class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-12">
               <h1 class="m-0">Konfirmasi Pesanan</h1>
               <p>Harap konfirmasi pesanan yang sudah masuk, jika semua informasi yang diberikan sudah benar, silahkan klik verify pada kolom yang sesuai</p>
-            </div><!-- /.col -->
-
-          </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+            </div>
+          </div>
+        </div>
       </div>
-      <!-- /.content-header -->
-
-      <!-- Main content -->
       <section class="content">
         <div class="container-fluid">
           <div class="row">
@@ -205,7 +178,6 @@ $result = $stmt->get_result();
                 <div class="card-header">
                   <h3 class="card-title">Data Konfirmasi Pesanan</h3>
                 </div>
-                <!-- /.card-header -->
                 <div class="card-body">
                   <table id="example1" class="table table-bordered table-striped">
                     <thead>
@@ -213,7 +185,7 @@ $result = $stmt->get_result();
                         <th>Nomor</th>
                         <th>Konfirmasi</th>
                         <th>Tolak</th>
-                        <!-- <th>Username</th> -->
+                        <th>Username</th>
                         <th>Email</th>
                         <th>Waktu Pesanan</th>
                         <th>Nomer Meja</th>
@@ -242,8 +214,9 @@ $result = $stmt->get_result();
                               ?>
                                 <td rowspan="<?= $rowspan ?>">
                                   <form action="../controller/admin/pesanan_konfirmasi.php?id=<?php echo $row['id'] ?>" method="POST">
-                                    <input type="text" id="meeting-time" name="meeting-time" required>
-                                    <button value="submit" class="btn btn-success">
+                                    <input class="" type="text" id="meeting-time" name="meeting-time" required>
+                                    <!-- <br> -->
+                                    <button value="submit" class="btn btn-success mt-2">
                                       Terima Pesanan
                                     </button>
                                   </form>
@@ -284,7 +257,7 @@ $result = $stmt->get_result();
                               <?php
                               }
                               ?>
-                              <!-- <td rowspan="<?= $rowspan ?>"><?php echo $row['username'] ?></td> -->
+                              <td rowspan="<?= $rowspan ?>"><?php echo $row['username'] ?></td>
                               <td rowspan="<?= $rowspan ?>"><?php echo $row['email'] ?></td>
                               <td rowspan="<?= $rowspan ?>">
                                 <?php if (!isset($row['waktu_bayar'])) { ?>
@@ -294,7 +267,26 @@ $result = $stmt->get_result();
                                   echo $row['waktu_bayar'] ?>
                                 <?php } ?>
                               </td>
-                              <td rowspan="<?= $rowspan ?>"><?php echo $row['meja'] ?></td>
+                              <td rowspan="<?= $rowspan ?>">
+                                <?php 
+                                $sql2 = "SELECT * FROM meja
+                                INNER JOIN meja_detail  ON meja_detail.id = meja.id_meja_detail 
+                                WHERE meja.id_keranjang = ?";
+
+                                $stmt2 = $conn->prepare($sql2);
+                                $stmt2->bind_param("i", $row['id']);
+                                $stmt2->execute();
+                                $result2 = $stmt2->get_result();
+                                if ($result2->num_rows > 0) {
+                                  while ($row2 = $result2->fetch_assoc()) {
+                                ?>
+                                    <?php echo $row2['kode']; ?>
+                                <?php
+                                  }
+                                }
+                                ?>
+
+                              </td>
                               <td rowspan="<?= $rowspan ?>">
                                 <?php if ($row['jenis'] === 'dine_in') { ?>
                                   Dine In
@@ -311,9 +303,9 @@ $result = $stmt->get_result();
                               <?php
                               if ($row['detail_status'] == 1) {
                               ?>
-                                <a href="../controller/keranjang_detail_cancel.php?id_detail=<?php echo $row['id_detail'] ?>&detail_status=<?php echo $row['detail_status'] ?>&id_ker=<?php echo $row['id'] ?>&harga=<?php echo $row['harga_menu'] ?>&jumlah=<?php echo $row['jumlah']?>" class="btn btn-success">Konfirmasi</a>
+                                <a href="../controller/keranjang_detail_cancel.php?id_detail=<?php echo $row['id_detail'] ?>&detail_status=<?php echo $row['detail_status'] ?>&id_ker=<?php echo $row['id'] ?>&harga=<?php echo $row['harga_menu'] ?>&jumlah=<?php echo $row['jumlah'] ?>" class="btn btn-success">Konfirmasi</a>
                               <?php } else { ?>
-                                <a href="../controller/keranjang_detail_cancel.php?id_detail=<?php echo $row['id_detail'] ?>&detail_status=<?php echo $row['detail_status'] ?>&id_ker=<?php echo $row['id'] ?>&harga=<?php echo $row['harga_menu'] ?>&jumlah=<?php echo $row['jumlah']?>" class="btn btn-primary">Batalkan</a> <?php } ?>
+                                <a href="../controller/keranjang_detail_cancel.php?id_detail=<?php echo $row['id_detail'] ?>&detail_status=<?php echo $row['detail_status'] ?>&id_ker=<?php echo $row['id'] ?>&harga=<?php echo $row['harga_menu'] ?>&jumlah=<?php echo $row['jumlah'] ?>" class="btn btn-primary">Batalkan</a> <?php } ?>
                             </td>
 
                             </tr>

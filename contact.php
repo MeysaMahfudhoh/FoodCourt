@@ -37,7 +37,7 @@ if (isset($_SESSION['error'])) {
       <a href="stand.php">stand</a>
       <a href="about.php">about</a>
       <a href="contact.php" class="active">contact</a>
-      <a href="blog.php">blog</a>
+      <!-- <a href="blog.php">blog</a> -->
     </nav>
     <div class="buttons">
       <button id="search-btn">
@@ -65,7 +65,7 @@ if (isset($_SESSION['error'])) {
           while ($row2 = $keranjang->fetch_array()) {
         ?>
             <div class="cart-item">
-            <a href="controller/cart-hapus.php?id=<?php echo $row2['id'] ?>&id_keranjang=<?php echo $row2['id_keranjang'] ?>&harga=<?php echo $row2['harga_menu'] ?>">
+              <a href="controller/cart-hapus.php?id=<?php echo $row2['id'] ?>&id_keranjang=<?php echo $row2['id_keranjang'] ?>&harga=<?php echo $row2['harga_menu'] ?>">
                 <i class="fas fa-times"></i>
               </a>
               <img src="image/menu/<?php echo $row2['gambar_menu'] ?>" alt="menu" />
@@ -73,16 +73,14 @@ if (isset($_SESSION['error'])) {
                 <h3><?php echo $row2['nama_menu'] ?></h3>
                 <div class="price"><?php echo $row2['total'] ?></div>
               </div>
-              <a href="controller/keranjang_detail_edit.php?id_detail=<?php echo $row2['id'] ?>&id_ker=<?php echo $row2['id_ker'] ?>&harga=<?php echo $row2['harga_menu'] ?>&aksi=tambah" 
-              class="btn btn-sm m-0" style="padding: 3px 3px;"><i class="fas fa-plus"></i></a>
+              <a href="controller/keranjang_detail_edit.php?id_detail=<?php echo $row2['id'] ?>&id_ker=<?php echo $row2['id_ker'] ?>&harga=<?php echo $row2['harga_menu'] ?>&aksi=tambah" class="btn btn-sm m-0" style="padding: 3px 3px;"><i class="fas fa-plus"></i></a>
               <h2><?php echo $row2['jumlah'] ?></h2>
-              <a href="controller/keranjang_detail_edit.php?id_detail=<?php echo $row2['id'] ?>&id_ker=<?php echo $row2['id_ker'] ?>&harga=<?php echo $row2['harga_menu'] ?>&aksi=kurang" 
-              class="btn btn-sm m-0" style="padding: 3px 3px;"><i class="fas fa-minus"></i></a>
+              <a href="controller/keranjang_detail_edit.php?id_detail=<?php echo $row2['id'] ?>&id_ker=<?php echo $row2['id_ker'] ?>&harga=<?php echo $row2['harga_menu'] ?>&aksi=kurang" class="btn btn-sm m-0" style="padding: 3px 3px;"><i class="fas fa-minus"></i></a>
             </div>
           <?php
           }
           ?>
-           <button class="btn" id="orderButton">Check Out</button>
+          <button class="btn" id="orderButton">Check Out</button>
         <?php
         } else {
         ?>
@@ -149,8 +147,6 @@ if (isset($_SESSION['error'])) {
 
   <script src="./script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
- 
   <script>
     document.getElementById('orderButton').addEventListener('click', function() {
       Swal.fire({
@@ -165,34 +161,35 @@ if (isset($_SESSION['error'])) {
         cancelButtonText: 'Take Away'
       }).then((result) => {
         if (result.isConfirmed) {
-          // Swal.fire(
-          //   'Dine In',
-          //   'You chose to dine in.',
-          //   'success'
-          // );
-          // header('Location: pesanan.php');
-          // Handle Dine In logic here
-          window.location.href = 'pesanan2.php?type=dine_in';
+          Swal.fire({
+            title: 'Berapa Orang ?',
+            input: "number",
+            showCloseButton: true,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Pesan',
+          }).then((inputResult) => {
+            if (inputResult.value) {
+              const number = inputResult.value;
+              window.location.href = `pesanan2.php?type=dine_in&orang=${number}`;
+            } else {
+              window.location.href = 'stand.php';
+            }
+
+          });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
-          // Swal.fire(
-          //   'Take Away',
-          //   'You chose to take away.',
-          //   'success'
-          // );
-          // Handle Take Away logic here
-          // header('Location: pesanan.php');
           window.location.href = 'pesanan2.php?type=take_away';
         } else {
-          window.location.href = 'contact.php';
+          window.location.href = 'stand.php';
         }
       });
     });
   </script>
 
-   <script>
+
+  <script>
     $(document).ready(function() {
       $('#search-box').on('keypress', function(e) {
-        if (e.which == 13) { // Only trigger on Enter key press
+        if (e.which == 13) { 
           var query = $(this).val();
           $.ajax({
             url: 'controller/search.php',

@@ -161,7 +161,7 @@ if (isset($_SESSION['error'])) {
         <a href="#about">about</a>
         <a href="#products">Stand</a>
         <a href="#contact">contact</a>
-        <a href="#blog">blog</a>
+        <!-- <a href="#blog">blog</a> -->
       </div>
       <div class="credit">
         creaated by <span>FoodCourt Universitas Negeri Surabaya</span>
@@ -187,22 +187,22 @@ if (isset($_SESSION['error'])) {
         cancelButtonText: 'Take Away'
       }).then((result) => {
         if (result.isConfirmed) {
-          // Swal.fire(
-          //   'Dine In',
-          //   'You chose to dine in.',
-          //   'success'
-          // );
-          // header('Location: pesanan.php');
-          // Handle Dine In logic here
-          window.location.href = 'pesanan2.php?type=dine_in';
+          Swal.fire({
+            title: 'Berapa Orang ?',
+            input: "number",
+            showCloseButton: true,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Pesan',
+          }).then((inputResult) => {
+            if (inputResult.value) {
+              const number = inputResult.value;
+              window.location.href = `pesanan2.php?type=dine_in&orang=${number}`;
+            } else {
+              window.location.href = 'stand.php';
+            }
+
+          });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
-          // Swal.fire(
-          //   'Take Away',
-          //   'You chose to take away.',
-          //   'success'
-          // );
-          // Handle Take Away logic here
-          // header('Location: pesanan.php');
           window.location.href = 'pesanan2.php?type=take_away';
         } else {
           window.location.href = 'blog.php';
@@ -210,6 +210,7 @@ if (isset($_SESSION['error'])) {
       });
     });
   </script>
+
 
   <script>
     $(document).ready(function() {

@@ -49,7 +49,7 @@ if (isset($_SESSION['sukses'])) {
       <a href="stand.php" class="active">stand</a>
       <a href="about.php">about</a>
       <a href="contact.php">contact</a>
-      <a href="blog.php">blog</a>
+      <!-- <a href="blog.php">blog</a> -->
     </nav>
     <div class="buttons">
       <button id="search-btn">
@@ -189,7 +189,6 @@ if (isset($_SESSION['sukses'])) {
         cancelButtonText: 'Take Away'
       }).then((result) => {
         if (result.isConfirmed) {
-          // window.location.href = 'pesanan2.php?type=dine_in';
           Swal.fire({
             title: 'Berapa Orang ?',
             input: "number",
@@ -199,7 +198,6 @@ if (isset($_SESSION['sukses'])) {
           }).then((inputResult) => {
             if (inputResult.value) {
               const number = inputResult.value;
-              // Swal.fire(`Orang: ${number}`);
               window.location.href = `pesanan2.php?type=dine_in&orang=${number}`;
             } else {
               window.location.href = 'stand.php';
@@ -243,42 +241,6 @@ if (isset($_SESSION['sukses'])) {
       });
     });
   </script>
-  <!-- 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const incrementButtons = document.querySelectorAll('.btn-increment');
-      const decrementButtons = document.querySelectorAll('.btn-decrement');
-
-      incrementButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const id = this.getAttribute('data-id');
-          const quantityDisplay = document.getElementById('quantity-' + id);
-          if (quantityDisplay) { 
-            let currentQuantity = parseInt(quantityDisplay.textContent);
-            quantityDisplay.textContent = ++currentQuantity;
-          } else {
-            console.error('Quantity display element not found for ID:', id);
-          }
-        });
-      });
-
-      decrementButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const id = this.getAttribute('data-id');
-          const quantityDisplay = document.getElementById('quantity-' + id);
-          if (quantityDisplay) { 
-            let currentQuantity = parseInt(quantityDisplay.textContent);
-            if (currentQuantity > 0) {
-              quantityDisplay.textContent = --currentQuantity;
-            }
-          } else {
-            console.error('Quantity display element not found for ID:', id);
-          }
-        });
-      });
-    });
-  </script> -->
-
 
 </body>
 

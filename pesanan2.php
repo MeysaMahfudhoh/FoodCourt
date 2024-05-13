@@ -67,16 +67,15 @@ if (isset($_SESSION['user_id'])) {
     $detail = $stmt2->get_result();
 
     //menapilkan meja id paling tinggi
-    $sql4 = "SELECT MAX(id_meja_detail) AS maxmeja , id_keranjang
-    FROM meja";
+    $sql4 = "SELECT * FROM meja ORDER BY id DESC LIMIT 1";
     $result2 = mysqli_query($conn, $sql4);
     $meja = mysqli_fetch_assoc($result2);
-    $id_meja_detail =  $meja['maxmeja'] + 1;
+    $id_meja_detail =  $meja['id_meja_detail'] + 1;
     $id2 = $meja['id_keranjang'];
 
     //insert meja
-    if ($id2 = $id) {
-    } else {
+    if ($id2 !== $id) {
+        // var_dump(true, $id, $id2);
         $sql3 = "INSERT INTO meja (id_keranjang, id_meja_detail) VALUES (?,?)";
         $stmt3 = $conn->prepare($sql3);
         for ($i = 0; $i < $orang; $i++) {
@@ -84,7 +83,10 @@ if (isset($_SESSION['user_id'])) {
             $stmt3->bind_param("ii", $id, $id_meja_detail_current);
             $stmt3->execute();
         }
-    }
+    } 
+    // else {
+        // var_dump(false);
+    // }
 
     //menampilkan meja berdasarkan nomer keranjang
     $sql5 = "SELECT *  FROM meja
@@ -569,16 +571,12 @@ if ($keranjang->num_rows === 0) {
                                     <?php
                                     if ($data['status'] < 3) {
                                         if (isset($data['waktu_batal'])) {
-                                            // $data['waktu_batal'] = $wakkktu;
                                     ?>
                                             <a target="" href="controller/keranjang_cancel.php?id_keranjang=<?php echo $data['id'] ?>&type=<?php echo $type ?>">
                                                 <button id="myButton" class="btn btn-primary font-weight-bold mr-1" style="background-color:  #1714B6; width: 100px; border-radius:15px">
                                                     <div id="time"></div> Cancel
                                                 </button>
                                             </a>
-                                            <!-- <a href="index.php">
-                                                <button class="btn btn-primary font-weight-bold" style="background-color:  #1714B6; width: 120px;  border-radius:15px">Kembali</button>
-                                            </a> -->
                                         <?php } else { ?>
                                             <a target="_blank" href="controller/keranjang_cancel.php?id_keranjang=<?php echo $data['id'] ?>&type=<?php echo $type ?>">
                                                 <button class="btn btn-primary font-weight-bold mr-1" style="background-color:  #1714B6; width: 100px; border-radius:15px">

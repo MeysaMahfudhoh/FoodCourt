@@ -69,11 +69,7 @@ $transaksi = mysqli_fetch_assoc($result3);
 
 <body class="hold-transition sidebar-mini layout-fixed">
   <div class="wrapper">
-
-
-    <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-      <!-- Left navbar links -->
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
@@ -82,10 +78,7 @@ $transaksi = mysqli_fetch_assoc($result3);
           <a href="dashboard.php" class="nav-link">Dashboard</a>
         </li>
       </ul>
-
-      <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
-        <!-- Navbar Search -->
         <li class="nav-item">
           <a class="nav-link" data-widget="navbar-search" href="#" role="button">
             <i class="fas fa-search"></i>
@@ -107,7 +100,6 @@ $transaksi = mysqli_fetch_assoc($result3);
           </div>
         </li>
 
-        <!-- Notifications Dropdown Menu -->
         <li class="nav-item dropdown">
           <a class="nav-link" data-toggle="dropdown" href="#">
             <i class="far fa-user"></i> Profile
@@ -125,27 +117,16 @@ $transaksi = mysqli_fetch_assoc($result3);
 
       </ul>
     </nav>
-    <!-- /.navbar -->
-
-    <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color: #1714B6;">
-      <!-- Brand Logo -->
+
       <a href="dashboard.php" class="brand-link">
         <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">Halaman Admin</span>
       </a>
 
-      <!-- Sidebar -->
       <div class="sidebar">
-
-        <!-- Sidebar Menu -->
         <nav class="mt-2">
-
-
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-
             <li class="nav-item">
               <a href="dashboard.php" class="nav-link">
                 <i class="nav-icon fas fa-home"></i>
@@ -157,28 +138,20 @@ $transaksi = mysqli_fetch_assoc($result3);
 
           </ul>
         </nav>
-        <!-- /.sidebar-menu -->
       </div>
-      <!-- /.sidebar -->
     </aside>
 
-    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
       <div class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
               <h1 class="m-0">Selamat Datang Admin</h1>
               <p>Dashboard FoodCourt Unesa</p>
-            </div><!-- /.col -->
-
-          </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+            </div>
+          </div>
+        </div>
       </div>
-      <!-- /.content-header -->
-
-      <!-- Main content -->
       <section class="content">
         <div class="container-fluid">
           <div class="row">
@@ -217,7 +190,6 @@ $transaksi = mysqli_fetch_assoc($result3);
                 </div>
               </div>
             </div>
-            <!-- ./col -->
           </div>
           <div class="card">
             <div class="card-header">
@@ -228,12 +200,9 @@ $transaksi = mysqli_fetch_assoc($result3);
                 <canvas id="areaChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
               </div>
             </div>
-            <!-- /.card-body -->
           </div>
-          <!-- /.row (main row) -->
-        </div><!-- /.container-fluid -->
+        </div>
       </section>
-      <!-- /.content -->
     </div>
 
   </div>

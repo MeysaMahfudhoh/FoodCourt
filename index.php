@@ -37,7 +37,7 @@ if (isset($_SESSION['error'])) {
       <a href="stand.php">stand</a>
       <a href="about.php">about</a>
       <a href="contact.php">contact</a>
-      <a href="blog.php">blog</a>
+      <!-- <a href="blog.php">blog</a> -->
     </nav>
     <div class="buttons">
       <button id="search-btn">
@@ -265,15 +265,29 @@ if (isset($_SESSION['error'])) {
         cancelButtonText: 'Take Away'
       }).then((result) => {
         if (result.isConfirmed) {
-          window.location.href = 'pesanan2.php?type=dine_in';
+          Swal.fire({
+            title: 'Berapa Orang ?',
+            input: "number",
+            showCloseButton: true,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Pesan',
+          }).then((inputResult) => {
+            if (inputResult.value) {
+              const number = inputResult.value;
+              window.location.href = `pesanan2.php?type=dine_in&orang=${number}`;
+            } else {
+              window.location.href = 'stand.php';
+            }
+          });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           window.location.href = 'pesanan2.php?type=take_away';
         } else {
-          window.location.href = 'index.php';
+          window.location.href = 'stand.php';
         }
       });
     });
   </script>
+
 
   <script>
     $(document).ready(function() {
