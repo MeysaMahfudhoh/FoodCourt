@@ -345,8 +345,14 @@ if ($keranjang->num_rows === 0) {
                                         <?php } else { ?>
 
                                             <img src="./image/bulat5.svg" alt="" style="width: 60%;" />
-                                            <h6 class="">Dibuat</h6>
-                                            <h6 class=""><?php echo date("H:i", strtotime($data['waktu_antar']))  ?></h6>
+                                            <?php
+                                            if ($type === "dine_in") {
+                                            ?>
+                                               <h6 class="">Diantar</h6>
+                                            <?php } else { ?>
+                                               <h6 class="">Diambil</h6>
+                                            <?php } ?>
+                                            <h6 class=""><?php echo date("H;i", strtotime($data['waktu_antar']))  ?></h6>
                                     <?php
                                         }
                                     }
