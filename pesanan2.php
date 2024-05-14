@@ -352,7 +352,7 @@ if ($keranjang->num_rows === 0) {
                                             <?php } else { ?>
                                                <h6 class="">Diambil</h6>
                                             <?php } ?>
-                                            <h6 class=""><?php echo date("H;i", strtotime($data['waktu_antar']))  ?></h6>
+                                            <h6 class=""><?php echo date("H:i", strtotime($data['waktu_antar']))  ?></h6>
                                     <?php
                                         }
                                     }
