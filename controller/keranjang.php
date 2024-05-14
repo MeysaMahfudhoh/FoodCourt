@@ -22,7 +22,7 @@ $data = mysqli_fetch_assoc($result);
 
 date_default_timezone_set('Asia/Jakarta');
 $tanggal = date('Y-m-d H:i:s');
-$update = "UPDATE keranjang SET status = 2 , waktu_bayar = '$tanggal', meja ='$id_keranjang', jenis='$jenis'  WHERE id = $id_keranjang";
+$update = "UPDATE keranjang SET status = 2 , waktu_bayar = '$tanggal', jenis='$jenis'  WHERE id = $id_keranjang";
 $conn->query($update);
 
 // var_dump($data['total_harga']);

@@ -240,21 +240,28 @@ $result = $stmt->get_result();
                               <td rowspan="<?= $rowspan ?>"><?php echo $row['email'] ?></td>
                               <td rowspan="<?= $rowspan ?>">
                                 <?php
-                                $sql2 = "SELECT * FROM meja
-                                INNER JOIN meja_detail  ON meja_detail.id = meja.id_meja_detail 
-                                WHERE meja.id_keranjang = ?";
+                                // $sql2 = "SELECT * FROM meja
+                                // INNER JOIN meja_detail  ON meja_detail.id = meja.id_meja_detail 
+                                // WHERE meja.id_keranjang = ?";
 
-                                $stmt2 = $conn->prepare($sql2);
-                                $stmt2->bind_param("i", $row['id']);
-                                $stmt2->execute();
-                                $result2 = $stmt2->get_result();
-                                if ($result2->num_rows > 0) {
-                                  while ($row2 = $result2->fetch_assoc()) {
+                                // $stmt2 = $conn->prepare($sql2);
+                                // $stmt2->bind_param("i", $row['id']);
+                                // $stmt2->execute();
+                                // $result2 = $stmt2->get_result();
+                                // if ($result2->num_rows > 0) {
+                                //   while ($row2 = $result2->fetch_assoc()) {
                                 ?>
-                                    <?php echo $row2['kode']; ?>
-                                <?php
-                                  }
+                                    <?php
+                                if ($row['meja'] == 0) {
+                                  echo "---";
+                                } else {
+                                  echo $row['meja'];
                                 }
+                                ?>
+                              </td>
+                                <?php
+                                //   }
+                                // }
                                 ?>
 
                               </td>

@@ -3,13 +3,13 @@ session_start();
 include 'controller/koneksi.php';
 
 
-if (isset($_GET['type']) && !empty($_GET['type']) ) {
+if (isset($_GET['type']) && !empty($_GET['type'])) {
     $type = $conn->real_escape_string($_GET['type']);
 }
-if(isset($_GET['orang']) && !empty($_GET['orang'])){
-    $orang = $conn->real_escape_string($_GET['orang']);
-}else{
-    $orang = 0;
+if (isset($_GET['meja']) && !empty($_GET['meja'])) {
+    $meja = $conn->real_escape_string($_GET['meja']);
+} else {
+    $meja = 0;
 }
 // var_dump($type,$orang);
 
@@ -33,9 +33,9 @@ if (isset($_SESSION['user_id'])) {
     $wakkktu = $data['waktu_batal'];
     $waktu_pesan = $data['waktu_pesan'];
     $total_harga = $data['total_harga'];
-    if (!isset($type) && !isset($orang)) {
+    if (!isset($type) && !isset($meja)) {
         $type = $data['jenis'];
-        $orang = 0;
+        $meja = 0;
     }
 
     if (!isset($waktu_pesan)) {
@@ -43,7 +43,7 @@ if (isset($_SESSION['user_id'])) {
         date_default_timezone_set('Asia/Jakarta');
         $currentDateTime = date('Y-m-d H:i:s');
         $newDateTime = date('Y-m-d H:i:s', strtotime($currentDateTime . ' +10 minutes'));
-        $update = "UPDATE keranjang SET jenis = '$type', waktu_batal='$newDateTime', waktu_pesan='$currentDateTime' WHERE id =  $id ";
+        $update = "UPDATE keranjang SET  meja='$meja', jenis = '$type', waktu_batal='$newDateTime', waktu_pesan='$currentDateTime' WHERE id =  $id ";
         $conn->query($update);
     }
 
@@ -72,36 +72,36 @@ if (isset($_SESSION['user_id'])) {
     $detail = $stmt2->get_result();
 
     //menapilkan meja id paling tinggi
-    $sql4 = "SELECT * FROM meja ORDER BY id DESC LIMIT 1";
-    $result2 = mysqli_query($conn, $sql4);
-    $meja = mysqli_fetch_assoc($result2);
-    $id_meja_detail =  $meja['id_meja_detail'] + 1;
-    $id2 = $meja['id_keranjang'];
+    // $sql4 = "SELECT * FROM meja ORDER BY id DESC LIMIT 1";
+    // $result2 = mysqli_query($conn, $sql4);
+    // $meja = mysqli_fetch_assoc($result2);
+    // $id_meja_detail =  $meja['id_meja_detail'] + 1;
+    // $id2 = $meja['id_keranjang'];
 
     //insert meja
-    if ($id2 !== $id) {
-        // var_dump(true, $id, $id2);
-        $sql3 = "INSERT INTO meja (id_keranjang, id_meja_detail) VALUES (?,?)";
-        $stmt3 = $conn->prepare($sql3);
-        for ($i = 0; $i < $orang; $i++) {
-            $id_meja_detail_current = $id_meja_detail + $i;
-            $stmt3->bind_param("ii", $id, $id_meja_detail_current);
-            $stmt3->execute();
-        }
-    } 
+    // if ($id2 !== $id) {
+    // var_dump(true, $id, $id2);
+    // $sql3 = "INSERT INTO meja (id_keranjang, id_meja_detail) VALUES (?,?)";
+    // $stmt3 = $conn->prepare($sql3);
+    // for ($i = 0; $i < $orang; $i++) {
+    //     $id_meja_detail_current = $id_meja_detail + $i;
+    //     $stmt3->bind_param("ii", $id, $id_meja_detail_current);
+    //     $stmt3->execute();
+    // }
+    // } 
     // else {
-        // var_dump(false);
+    // var_dump(false);
     // }
 
     //menampilkan meja berdasarkan nomer keranjang
-    $sql5 = "SELECT *  FROM meja
-    INNER JOIN meja_detail ON meja.id_meja_detail = meja_detail.id
-    WHERE id_keranjang = ?
-    ";
-    $stmt4 = $conn->prepare($sql5);
-    $stmt4->bind_param("i", $id);
-    $stmt4->execute();
-    $mejakursi = $stmt4->get_result();
+    // $sql5 = "SELECT *  FROM meja
+    // INNER JOIN meja_detail ON meja.id_meja_detail = meja_detail.id
+    // WHERE id_keranjang = ?
+    // ";
+    // $stmt4 = $conn->prepare($sql5);
+    // $stmt4->bind_param("i", $id);
+    // $stmt4->execute();
+    // $mejakursi = $stmt4->get_result();
 
 
 
@@ -559,15 +559,22 @@ if ($keranjang->num_rows === 0) {
                                 </div>
                                 <div class="col-auto ml-auto">
                                     <h3>
+                                        <!-- <?php
+                                                if ($mejakursi->num_rows > 0) {
+                                                    while ($row4 = $mejakursi->fetch_array()) {
+                                                ?>
+                                                    <?php echo $row4['kode'] ?>
+                                                <?php }
+                                                } else { ?>
+                                                ---
+                                            <?php } ?> -->
                                         <?php
-                                        if ($mejakursi->num_rows > 0) {
-                                            while ($row4 = $mejakursi->fetch_array()) {
+                                        if ($meja == 0) {
+                                            echo "---";
+                                        } else {
+                                            echo $meja;
+                                        }
                                         ?>
-                                                <?php echo $row4['kode'] ?>
-                                            <?php }
-                                        } else { ?>
-                                            ---
-                                        <?php } ?>
                                     </h3>
                                 </div>
                             </div>

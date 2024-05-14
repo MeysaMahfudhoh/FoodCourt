@@ -19,7 +19,7 @@ if (isset($_SESSION['error'])) {
 include '../controller/koneksi.php';
 
 $sql = "SELECT keranjang_detail.id AS id_detail, keranjang.id, keranjang.status, keranjang.waktu_bayar, menu.nama_menu, menu.harga_menu, menu.gambar_menu , keranjang_detail.jumlah, keranjang_detail.total, keranjang_detail.id_keranjang
-, keranjang.id_user, user.username, user.email, keranjang.total_item, keranjang.jenis, keranjang.meja, keranjang_detail.status AS detail_status
+, keranjang.id_user, user.username, user.email, keranjang.total_item, keranjang.jenis, keranjang.meja, keranjang_detail.status AS detail_status, keranjang.meja
 FROM keranjang_detail 
 INNER JOIN menu  ON keranjang_detail.id_menu = menu.id 
 INNER JOIN keranjang ON keranjang.id = keranjang_detail.id_keranjang
@@ -268,24 +268,13 @@ $result = $stmt->get_result();
                                 <?php } ?>
                               </td>
                               <td rowspan="<?= $rowspan ?>">
-                                <?php 
-                                $sql2 = "SELECT * FROM meja
-                                INNER JOIN meja_detail  ON meja_detail.id = meja.id_meja_detail 
-                                WHERE meja.id_keranjang = ?";
-
-                                $stmt2 = $conn->prepare($sql2);
-                                $stmt2->bind_param("i", $row['id']);
-                                $stmt2->execute();
-                                $result2 = $stmt2->get_result();
-                                if ($result2->num_rows > 0) {
-                                  while ($row2 = $result2->fetch_assoc()) {
-                                ?>
-                                    <?php echo $row2['kode']; ?>
                                 <?php
-                                  }
+                                if ($row['meja'] == 0) {
+                                  echo "---";
+                                } else {
+                                  echo $row['meja'];
                                 }
                                 ?>
-
                               </td>
                               <td rowspan="<?= $rowspan ?>">
                                 <?php if ($row['jenis'] === 'dine_in') { ?>
