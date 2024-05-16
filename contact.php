@@ -162,22 +162,22 @@ if (isset($_SESSION['error'])) {
       }).then((result) => {
         if (result.isConfirmed) {
           Swal.fire({
-            title: 'Berapa Orang ?',
-            input: "number",
+            title: 'Meja Nomer ?',
+            input: "text",
             showCloseButton: true,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Pesan',
           }).then((inputResult) => {
             if (inputResult.value) {
-              const number = inputResult.value;
-              window.location.href = `pesanan2.php?type=dine_in&orang=${number}`;
+              const meja = inputResult.value;
+              window.location.href = `pesanan2.php?type=dine_in&meja=${meja}`;
             } else {
               window.location.href = 'stand.php';
             }
 
           });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
-          window.location.href = 'pesanan2.php?type=take_away';
+          window.location.href = 'pesanan2.php?type=take_away&meja=0';
         } else {
           window.location.href = 'stand.php';
         }
@@ -189,7 +189,7 @@ if (isset($_SESSION['error'])) {
   <script>
     $(document).ready(function() {
       $('#search-box').on('keypress', function(e) {
-        if (e.which == 13) { 
+        if (e.which == 13) {
           var query = $(this).val();
           $.ajax({
             url: 'controller/search.php',
